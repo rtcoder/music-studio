@@ -1,0 +1,41 @@
+@import "music-path.css";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100dvw;
+    height: 100dvh;
+    font-family: Arial, sans-serif;
+    background-color: #5b5b5b;
+    display: grid;
+    overflow: hidden;
+    grid-template-columns: 200px auto;
+    grid-template-rows: 30px auto 300px;
+    grid-template-areas: "top top"
+    "left-panel music-path"
+    "tools tools";
+}
+
+.top {
+    grid-area: top;
+    background-color: #333;
+    color: #fff;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.left-panel {
+    display: flex;
+    background: #000;
+    grid-area: left-panel;
+}
+
+.tools {
+    background: #09f;
+    grid-area: tools;
+}
