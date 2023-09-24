@@ -81,6 +81,18 @@
                     top: 0;
                     left: var(--progress-pos);
                 }
+
+                .path {
+                    .path-item {
+                        display: block;
+                        position: absolute;
+                        top: 0;
+                        background: #0099ff;
+                        border-radius: 3px;
+                        border: 1px solid #000;
+                        height: 100%;
+                    }
+                }
             }
 
             .path-list, .path-header {

@@ -29,7 +29,7 @@ body {
     justify-content: space-around;
     align-items: center;
 
-    .loop-container{
+    .loop-container {
         display: flex;
         flex-direction: row;
         gap: 5px;

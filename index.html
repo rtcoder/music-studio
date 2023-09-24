@@ -2,23 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Music Studio App</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <link href="styles/main.css" rel="stylesheet">
 </head>
 <body>
 <div class="top">
-<div class="loop-container">
-    <label>
-        <input type="checkbox" data-model="loopEnabled"> Loop
-    </label>
-    <label>
-        <input type="number" min="0" data-model="loopTime"> ms
-    </label>
-</div>
+    <div class="loop-container">
+        <label>
+            <input data-model="loopEnabled" type="checkbox"> Loop
+        </label>
+        <label>
+            <input data-model="loopTime" min="0" type="number"> s
+        </label>
+    </div>
+
+    <div class="controls">
+        <button class="play">play</button>
+        <button class="pause">pause</button>
+        <button class="stop">stop</button>
+    </div>
 </div>
 <div class="left-panel">
-    <div draggable="true" style="color:#fff;" data-drag-data="{elId:'asda'}">ad</div>
+    <div data-drag-data="{elId:'asda'}" draggable="true" style="color:#fff;">ad</div>
 </div>
 <div class="music-path">
     <div class="path-container">

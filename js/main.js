@@ -1,3 +1,4 @@
+import dom from './dom.js';
 import dragDrop from './drag-drop.js';
 import instrument from './instrument.js';
 import store from './store.js';
@@ -10,14 +11,24 @@ store.init({
     msProgress: 0,
     isPlaying: false,
     startPlayTime: null,
-    loopTime: 2000,
-    loopEnabled:false
+    loopTime: 2,
+    loopEnabled: false,
 });
 
 timeline.initTimeline();
 
 timeline.selectPath(store.get('paths.0.id'));
 dragDrop.initListeners();
-instrument.initListeners();
-timeline.playTimeline();
-console.log(store.get('loopTime'))
+instrument.init();
+
+dom.query('.top .controls').on('click', e => {
+    if (e.target.matches('.play')) {
+        timeline.playTimeline();
+    }
+    if (e.target.matches('.pause')) {
+        timeline.pauseTimeline();
+    }
+    if (e.target.matches('.stop')) {
+        timeline.stopTimeline();
+    }
+});

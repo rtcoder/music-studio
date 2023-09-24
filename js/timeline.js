@@ -1,4 +1,5 @@
 import dom from './dom.js';
+import {audioList} from './instrument.js';
 import store from './store.js';
 import {getRandomString} from './utils.js';
 
@@ -139,14 +140,24 @@ function selectPath(id) {
     store.set('selectedPath', id);
 }
 
+function getPathItem(item, pathId) {
+    return `<div class="path-item" draggable="true"
+                style="left: ${item.leftPos}px; width: ${item.width}px;"
+                data-drag-data="{id:'${item.id}', pathId:'${pathId}'}"></div>`;
+}
 
 function fillTimeline() {
+    pathList.empty();
+    pathHeader.empty();
     const paths = store.get('paths');
-    const content = paths.map(({id}) =>
-        `<div class="path" data-id="${id}"></div>`,
-    ).join('');
+    const content = paths.map(({id, data}) => {
+        const pathData = data.map(item => getPathItem(item, id)).join('');
+        return `<div class="path" data-id="${id}">${pathData}</div>`;
+    }).join('');
     pathList.append(content);
     pathHeader.append(content);
+
+    selectPath(store.get('selectedPath'))
 }
 
 function initTimeline() {
@@ -157,6 +168,9 @@ function initTimeline() {
 }
 
 function playTimeline() {
+    if (store.get('isPlaying')) {
+        return;
+    }
     store.set('isPlaying', true);
     runTimelineProgress(false);
 }
@@ -171,16 +185,25 @@ function stopTimeline() {
 }
 
 function runTimelineProgress(incrementMs = true) {
+    const msProgress = store.get('msProgress');
     if (incrementMs) {
         const loopEnabled = store.get('loopEnabled');
         const loopTime = store.get('loopTime');
-        const msProgress = store.get('msProgress');
-        if (loopEnabled && loopTime !== null && loopTime <= msProgress) {
+        if (loopEnabled && loopTime !== null && loopTime * 1000 <= msProgress) {
             setProgressMs(0);
         } else {
             setProgressMs(msProgress + 20);
         }
     }
+    const paths = store.get('paths');
+    paths.forEach(path => {
+        path.data.filter(({start, end})=>{
+            return start<=msProgress&&end>=msProgress
+        }).filter(({audio})=>{
+            return audio.paused
+        }).forEach(({audio})=>audio.play());
+    });
+
     if (store.get('isPlaying')) {
         setTimeout(runTimelineProgress, 20);
     }
@@ -194,14 +217,49 @@ function setProgressPosition(position) {
 
 function setProgressMs(ms) {
     store.set('msProgress', ms);
-    const secondWidth = 50;
     setProgressPosition(
-        ms / (1000 / secondWidth),
+        calculateProgressPosition(ms),
     );
+}
+
+function calculateProgressPosition(ms) {
+    const secondWidth = 50;
+    return ms / (1000 / secondWidth);
+}
+
+function addSoundToPath(soundId) {
+    const selectedPathId = store.get('selectedPath');
+    const paths = store.get('paths');
+    const msProgress = store.get('msProgress');
+    const audioDefinition = audioList[soundId];
+    const end = audioDefinition.duration + msProgress;
+    const leftPos = calculateProgressPosition(msProgress);
+    const width = calculateProgressPosition(end) - leftPos;
+    const sound = {
+        id: getRandomString(),
+        audio: new Audio(audioDefinition.audio.src),
+        start: msProgress,
+        end,
+        leftPos,
+        width,
+    };
+
+    store.set('paths', paths.map(path => {
+        if (path.id === selectedPathId) {
+            path.data.push(sound);
+        }
+
+        return path;
+    }));
+
+    fillTimeline();
 }
 
 export default {
     initTimeline,
     selectPath,
     playTimeline,
+    pauseTimeline,
+    stopTimeline,
+    addSoundToPath,
 };

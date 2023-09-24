@@ -3,19 +3,21 @@ import {htmlToNodeElements} from './utils.js';
 
 function dragover(ev) {
     ev.preventDefault();
-    ev.target.classList.add('dragover')
-    console.log(ev)
+    ev.target.classList.add('dragover');
+    console.log(ev);
     const rect = ev.target.getBoundingClientRect();
     const scrollLeft = ev.target.scrollLeft;
 
     const x = ev.clientX - rect.left + scrollLeft;
 
-    ev.target.style.setProperty('--data-preview-left-pos', `${x}px`)
+    ev.target.style.setProperty('--data-preview-left-pos', `${x}px`);
 
 }
-function dragLeave(ev){
-    ev.target.classList.remove('dragover')
+
+function dragLeave(ev) {
+    ev.target.classList.remove('dragover');
 }
+
 function drag(ev) {
     ev.dataTransfer.setData('text', ev.target.getAttribute('data-drag-data'));
 }
@@ -27,8 +29,8 @@ function drop(ev) {
     console.log(data);
     // ev.target.classList.remove('dragover')
     ev.target.append(...htmlToNodeElements(
-        `<div class="m-item">${data}</div>`
-    ))
+        `<div class="m-item">${data}</div>`,
+    ));
 }
 
 function initListeners() {
