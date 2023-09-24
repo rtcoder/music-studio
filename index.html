@@ -7,7 +7,16 @@
     <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-<div class="top"></div>
+<div class="top">
+<div class="loop-container">
+    <label>
+        <input type="checkbox" data-model="loopEnabled"> Loop
+    </label>
+    <label>
+        <input type="number" min="0" data-model="loopTime"> ms
+    </label>
+</div>
+</div>
 <div class="left-panel">
     <div draggable="true" style="color:#fff;" data-drag-data="{elId:'asda'}">ad</div>
 </div>

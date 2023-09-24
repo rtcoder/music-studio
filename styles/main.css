@@ -14,7 +14,7 @@ body {
     display: grid;
     overflow: hidden;
     grid-template-columns: 200px auto;
-    grid-template-rows: 30px auto 300px;
+    grid-template-rows: 40px auto 300px;
     grid-template-areas: "top top"
     "left-panel music-path"
     "tools tools";
@@ -28,6 +28,12 @@ body {
     display: flex;
     justify-content: space-around;
     align-items: center;
+
+    .loop-container{
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+    }
 }
 
 .left-panel {

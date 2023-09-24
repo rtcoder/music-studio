@@ -24,7 +24,7 @@ function generateTimelineLabels() {
     for (let second = startTime; second <= endTime; second += labelInterval) {
         const label = document.createElement('div');
         label.classList.add('timeline-label');
-        label.textContent = second + 's';
+        label.textContent = (second + 1) + 's';
         timelineNative.appendChild(label);
     }
 }
@@ -156,7 +156,52 @@ function initTimeline() {
     addPaths(20);
 }
 
+function playTimeline() {
+    store.set('isPlaying', true);
+    runTimelineProgress(false);
+}
+
+function pauseTimeline() {
+    store.set('isPlaying', false);
+}
+
+function stopTimeline() {
+    store.set('isPlaying', false);
+    setProgressMs(0);
+}
+
+function runTimelineProgress(incrementMs = true) {
+    if (incrementMs) {
+        const loopEnabled = store.get('loopEnabled');
+        const loopTime = store.get('loopTime');
+        const msProgress = store.get('msProgress');
+        if (loopEnabled && loopTime !== null && loopTime <= msProgress) {
+            setProgressMs(0);
+        } else {
+            setProgressMs(msProgress + 20);
+        }
+    }
+    if (store.get('isPlaying')) {
+        setTimeout(runTimelineProgress, 20);
+    }
+}
+
+function setProgressPosition(position) {
+    pathList.style({
+        '--progress-pos': `${position}px`,
+    });
+}
+
+function setProgressMs(ms) {
+    store.set('msProgress', ms);
+    const secondWidth = 50;
+    setProgressPosition(
+        ms / (1000 / secondWidth),
+    );
+}
+
 export default {
     initTimeline,
     selectPath,
+    playTimeline,
 };

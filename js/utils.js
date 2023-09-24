@@ -11,7 +11,7 @@ export function getRandomString(length = 20) {
 }
 
 export const isFormNode = node => ['input', 'textarea', 'select'].includes(node.tagName.toLowerCase());
-
+export const isCheckbox = node => node.tagName.toLowerCase() === 'input' && node.getAttribute('type') === 'checkbox';
 export const htmlToNodeElements = html => {
     const wrapper = document.createElement('div');
     wrapper.innerHTML = html;

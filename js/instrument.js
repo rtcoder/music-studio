@@ -22,7 +22,9 @@ const audioList = {
 };
 
 function playAudio(key) {
-    const audio = audioList[key];
+    const audio = audioList[key];console.log(key)
+
+
     audio.currentTime = 0;
     audio.play();
     const keyElement = dom.query(`.key[data-key="${key}"]`);
@@ -69,4 +71,5 @@ function initListeners() {
 
 export default {
     initListeners,
+    audioList
 };

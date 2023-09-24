@@ -166,16 +166,21 @@ class Dom {
      */
     style(arg) {
         if (typeof arg === 'string') {
-            return this.nativeElement(true).style[arg];
+            return this.nativeElement(true).style.getPropertyValue(arg);
         }
         if (typeof arg === 'object') {
             this.#elements.forEach(el => {
                 Object.keys(arg).forEach(key => {
-                    el.style[key] = arg[key];
+                    el.style.setProperty(key, arg[key]);
                 });
             });
         }
 
+        return this;
+    }
+
+    each(callback) {
+        this.#elements.forEach(callback);
         return this;
     }
 }

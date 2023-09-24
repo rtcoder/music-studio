@@ -1,4 +1,5 @@
-import {isFormNode} from './utils.js';
+import dom from './dom.js';
+import {isCheckbox, isFormNode} from './utils.js';
 
 class Store {
     static #data = {};
@@ -14,6 +15,7 @@ class Store {
      */
     init(value) {
         Store.#data = value;
+        this.#initValues();
     }
 
     /**
@@ -57,7 +59,7 @@ class Store {
     }
 
     #initValues() {
-        document.querySelectorAll('[data-model]').forEach(el => {
+        dom.query('[data-model]').each(el => {
             this.#setValueToElement(el);
         });
     }
@@ -65,22 +67,39 @@ class Store {
     #setValueToElement(el) {
         const path = el.getAttribute('data-model');
         if (path?.length) {
+            const value = this.get(path);
             if (isFormNode(el)) {
-                el.value = this.get(path);
+                if (isCheckbox(el)) {
+                    el.checked = !!value;
+                } else {
+                    el.value = value;
+                }
             } else {
-                el.innerHTML = this.get(path);
+                el.innerHTML = value;
             }
         }
     }
 
     #initListener() {
-        document.body.addEventListener('input', event => {
-            if (event.target.matches('[data-model]')) {
-                const el = event.target;
-                const value = isFormNode(el) ? el.value : el.innerHTML;
-                const path = el.getAttribute('data-model');
-                this.set(path, value);
-            }
+        dom.query('body').on({
+            'input': event => {
+                if (event.target.matches('[data-model]')) {
+                    const el = event.target;
+                    const value = isFormNode(el) ? el.value : el.innerHTML;
+                    const path = el.getAttribute('data-model');
+                    this.set(path, value);
+                }
+            },
+            'change': event => {
+                if (event.target.matches('[data-model]')) {
+                    const el = event.target;
+                    if (!isCheckbox(el)) {
+                        return;
+                    }
+                    const path = el.getAttribute('data-model');
+                    this.set(path, el.checked);
+                }
+            },
         });
 
         const observer = new MutationObserver(mutationsList => {
@@ -102,7 +121,7 @@ class Store {
 
     #setValueToView(path) {
         const value = this.get(path);
-        document.querySelectorAll(`[data-model="${path}"]`).forEach(el => {
+        dom.query(`[data-model="${path}"]`).each(el => {
             if (isFormNode(el)) {
                 el.value = value;
             } else {
