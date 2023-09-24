@@ -141,7 +141,7 @@ function selectPath(id) {
 }
 
 function getPathItem(item, pathId) {
-    return `<div class="path-item" draggable="true"
+    return `<div class="path-item" draggable="true" data-sound-id="${item.soundId}" data-item-id="${item.id}"
                 style="left: ${item.leftPos}px; width: ${item.width}px;"
                 data-drag-data="{id:'${item.id}', pathId:'${pathId}'}"></div>`;
 }
@@ -157,7 +157,7 @@ function fillTimeline() {
     pathList.append(content);
     pathHeader.append(content);
 
-    selectPath(store.get('selectedPath'))
+    selectPath(store.get('selectedPath'));
 }
 
 function initTimeline() {
@@ -242,6 +242,7 @@ function addSoundToPath(soundId) {
         end,
         leftPos,
         width,
+        soundId,
     };
 
     store.set('paths', paths.map(path => {

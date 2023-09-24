@@ -90,7 +90,80 @@
                         background: #0099ff;
                         border-radius: 3px;
                         border: 1px solid #000;
-                        height: 100%;
+                        height: 5px;
+                        --top-increment: 5px;
+
+                        &.active {
+                            background: #00c4ff;
+                        }
+
+                        &[data-sound-id=a] {
+                            top: calc(var(--top-increment) * 0);
+                        }
+
+                        &[data-sound-id=s] {
+                            top: calc(var(--top-increment) * 1);
+                        }
+
+                        &[data-sound-id=d] {
+                            top: calc(var(--top-increment) * 2);
+                        }
+
+                        &[data-sound-id=f] {
+                            top: calc(var(--top-increment) * 3);
+                        }
+
+                        &[data-sound-id=g] {
+                            top: calc(var(--top-increment) * 4);
+                        }
+
+                        &[data-sound-id=h] {
+                            top: calc(var(--top-increment) * 5);
+                        }
+
+                        &[data-sound-id=j] {
+                            top: calc(var(--top-increment) * 6);
+                        }
+
+                        &[data-sound-id=k] {
+                            top: calc(var(--top-increment) * 7);
+                        }
+
+                        &[data-sound-id=l] {
+                            top: calc(var(--top-increment) * 8);
+                        }
+
+                        &[data-sound-id=";"] {
+                            top: calc(var(--top-increment) * 9);
+                        }
+
+                        &[data-sound-id=w] {
+                            top: calc(var(--top-increment) * 10);
+                        }
+
+                        &[data-sound-id=e] {
+                            top: calc(var(--top-increment) * 11);
+                        }
+
+                        &[data-sound-id=t] {
+                            top: calc(var(--top-increment) * 12);
+                        }
+
+                        &[data-sound-id=y] {
+                            top: calc(var(--top-increment) * 13);
+                        }
+
+                        &[data-sound-id=u] {
+                            top: calc(var(--top-increment) * 14);
+                        }
+
+                        &[data-sound-id=o] {
+                            top: calc(var(--top-increment) * 15);
+                        }
+
+                        &[data-sound-id=p] {
+                            top: calc(var(--top-increment) * 16);
+                        }
                     }
                 }
             }
@@ -99,7 +172,7 @@
 
                 .path {
                     width: 100%;
-                    height: 50px;
+                    height: calc(17 * 5px);
                     border-bottom: 1px solid #333;
                     color: #fff;
                     position: relative;
