@@ -18,6 +18,7 @@ body {
     grid-template-areas: "top top"
     "left-panel music-path"
     "tools tools";
+    user-select: none;
 }
 
 .top {
@@ -38,4 +39,50 @@ body {
 .tools {
     background: #09f;
     grid-area: tools;
+
+    .piano {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+
+        .key {
+            width: 70px;
+            height: 200px;
+            border: 1px solid #000;
+            background: linear-gradient(#fff 96%, #eee 4%);
+            cursor: pointer;
+            transition: background-color 0.1s;
+            color: #777;
+            text-transform: uppercase;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 5px;
+            border-radius: 0 0 5px 5px;
+
+            &.black {
+                width: 44px;
+                height: 140px;
+                background: linear-gradient(#333, #000);
+                z-index: 1;
+                position: relative;
+                top: -30px;
+                margin: 0 -22px;
+                border-radius: 0 0 5px 5px;
+
+                &.active {
+                    box-shadow: inset -5px -10px 10px rgba(255, 255, 255, 0.1);
+                    background: linear-gradient(to bottom, #000, #434343);
+                }
+            }
+
+            &.active {
+                box-shadow: inset -5px 5px 20px rgba(0, 0, 0, 0.2);
+                background: linear-gradient(to bottom, #fff 0%, #eee 100%);
+            }
+        }
+
+    }
+
 }

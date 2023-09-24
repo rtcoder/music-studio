@@ -25,14 +25,19 @@
                 grid-area: path-header;
                 position: sticky;
                 left: 0;
-                padding-top: 20px;
                 border-right: 1px solid #333;
                 background: #2a2a2a;
+                z-index: 1;
 
-                .path {
+                &:before {
+                    content: ' ';
+                    top: 0;
+                    left: 0;
                     width: 100%;
-                    height: 50px;
-                    border-bottom: 1px solid #333;
+                    height: 20px;
+                    background-color: #222;
+                    position: sticky;
+                    display: flex;
                 }
             }
 
@@ -47,6 +52,7 @@
                 position: sticky;
                 top: 0;
                 grid-area: timeline;
+                z-index: 1;
 
                 .timeline-label {
                     width: 50px;
@@ -63,11 +69,47 @@
                 flex-direction: column;
                 justify-content: flex-start;
                 min-width: fit-content;
+                position: relative;
+
+                &:after {
+                    content: ' ';
+                    width: 1px;
+                    height: 100%;
+                    background-color: blue;
+                    position: absolute;
+                    top: 0;
+                    left: 5px;
+                }
+            }
+
+            .path-list, .path-header {
 
                 .path {
                     width: 100%;
                     height: 50px;
                     border-bottom: 1px solid #333;
+                    color: #fff;
+                    position: relative;
+                    --data-preview-left-pos: 0;
+
+                    &.selected {
+                        background-color: rgba(0, 0, 0, 0.4);
+                    }
+
+                    &.dragover {
+                        background-color: rgba(255, 255, 0, 0.5);
+
+                        &:before {
+                            content: ' ';
+                            width: 100px;
+                            height: 100%;
+                            top: 0;
+                            display: flex;
+                            background: #0099ff;
+                            position: absolute;
+                            left: var(--data-preview-left-pos)
+                        }
+                    }
                 }
             }
         }

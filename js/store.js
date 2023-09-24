@@ -1,4 +1,4 @@
-const isFormNode = node => ['input', 'textarea', 'select'].includes(node.tagName.toLowerCase());
+import {isFormNode} from './utils.js';
 
 class Store {
     static #data = {};
@@ -86,14 +86,12 @@ class Store {
         const observer = new MutationObserver(mutationsList => {
             for (const mutation of mutationsList) {
                 if (mutation.type === 'childList') {
-                    // Znaleziono zmianę w strukturze dziecka (dodanie/usunięcie elementu)
                     if (mutation.addedNodes.length > 0) {
                         mutation.addedNodes.forEach(el => {
                             this.#setValueToElement(el);
                         });
                     } else if (mutation.removedNodes.length > 0) {
-                        console.log('Usunięto element:', mutation.removedNodes[0]);
-                        // Tutaj można dodać kod obsługi, gdy element jest usuwany
+                        // console.log('Usunięto element:', mutation.removedNodes[0]);
                     }
                 }
             }

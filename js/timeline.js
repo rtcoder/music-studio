@@ -6,16 +6,17 @@ const pathContainer = dom.query('.path-container');
 const pathWrapper = pathContainer.query('.path-wrapper');
 const pathList = pathContainer.query('.path-list');
 const pathHeader = pathContainer.query('.path-header');
-const timeline = pathWrapper.query('.timeline-container').nativeElement(true);
+const timeline = pathWrapper.query('.timeline-container');
+const timelineNative = timeline.nativeElement(true);
 
 function generateTimelineLabels() {
     const labelInterval = 1; // Co ile sekund ma być wyświetlana etykieta
     const pixelsPerSecond = 50;
 
-    timeline.innerHTML = ''; // Wyczyść zawartość, aby uniknąć podwójnych etykiet
+    timelineNative.innerHTML = ''; // Wyczyść zawartość, aby uniknąć podwójnych etykiet
 
-    const containerWidth = timeline.offsetWidth; // Szerokość rodzica
-    const scrollLeft = timeline.scrollLeft; // Pozycja przewijania
+    const containerWidth = timelineNative.offsetWidth; // Szerokość rodzica
+    const scrollLeft = timelineNative.scrollLeft; // Pozycja przewijania
     const totalSeconds = Math.floor(containerWidth / pixelsPerSecond); // Oblicz ilość sekund
     const startTime = Math.floor(scrollLeft / pixelsPerSecond); // Czas rozpoczęcia
     const endTime = startTime + totalSeconds; // Czas zakończenia
@@ -24,7 +25,7 @@ function generateTimelineLabels() {
         const label = document.createElement('div');
         label.classList.add('timeline-label');
         label.textContent = second + 's';
-        timeline.appendChild(label);
+        timelineNative.appendChild(label);
     }
 }
 
@@ -73,6 +74,14 @@ function listenToTimelineScroll() {
     });
 }
 
+function listenTimelineClick() {
+    pathWrapper.on('click', e => {
+        if (e.target.matches('.path')) {
+            selectPath(e.target.getAttribute('data-id'));
+        }
+    });
+}
+
 function addPaths(count = 1) {
 
     const paths = store.get('paths');
@@ -115,12 +124,39 @@ function removeLastEmptyPaths(count = 1) {
     }
 }
 
-function initTimeline() {
+function runListeners() {
     listenToTimelineScroll();
+    listenTimelineClick();
+}
+
+function selectPath(id) {
+    pathList.query('.path').removeClass('selected');
+    pathHeader.query('.path').removeClass('selected');
+
+    pathList.query(`.path[data-id="${id}"]`).addClass('selected');
+    pathHeader.query(`.path[data-id="${id}"]`).addClass('selected');
+
+    store.set('selectedPath', id);
+}
+
+
+function fillTimeline() {
+    const paths = store.get('paths');
+    const content = paths.map(({id}) =>
+        `<div class="path" data-id="${id}"></div>`,
+    ).join('');
+    pathList.append(content);
+    pathHeader.append(content);
+}
+
+function initTimeline() {
+    runListeners();
     generateTimelineLabels();
+    fillTimeline();
     addPaths(20);
 }
 
 export default {
     initTimeline,
+    selectPath,
 };
