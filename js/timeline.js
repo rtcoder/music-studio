@@ -4,6 +4,8 @@ import store from './store.js';
 import {getRandomString} from './utils.js';
 
 const pathContainer = dom.query('.path-container');
+const pathContainerNative = pathContainer.nativeElement(true);
+const pathContainerRect = pathContainerNative.getBoundingClientRect();
 const pathWrapper = pathContainer.query('.path-wrapper');
 const pathList = pathContainer.query('.path-list');
 const pathHeader = pathContainer.query('.path-header');
@@ -182,6 +184,7 @@ function pauseTimeline() {
 function stopTimeline() {
     store.set('isPlaying', false);
     setProgressMs(0);
+    pathContainerNative.scrollLeft = 0;
 }
 
 function runTimelineProgress(incrementMs = true) {
@@ -197,11 +200,15 @@ function runTimelineProgress(incrementMs = true) {
     }
     const paths = store.get('paths');
     paths.forEach(path => {
-        path.data.filter(({start, end})=>{
-            return start<=msProgress&&end>=msProgress
-        }).filter(({audio})=>{
-            return audio.paused
-        }).forEach(({audio})=>audio.play());
+        path.data.filter(({start, end}) => {
+            return start <= msProgress && end >= msProgress;
+        }).filter(({audio}) => {
+            return audio.paused;
+        }).forEach(({audio, id}) =>
+            audio.play().then(_ =>
+                dom.query(`.path-item[data-item-id="${id}"]`).addClass('active'),
+            ),
+        );
     });
 
     if (store.get('isPlaying')) {
@@ -213,6 +220,11 @@ function setProgressPosition(position) {
     pathList.style({
         '--progress-pos': `${position}px`,
     });
+    const scrollLeft = pathContainerNative.scrollLeft;
+    const posLeftScroll = position - scrollLeft;
+    if (posLeftScroll > pathContainerRect.width / 2) {
+        pathContainerNative.scrollLeft++;
+    }
 }
 
 function setProgressMs(ms) {
@@ -235,9 +247,14 @@ function addSoundToPath(soundId) {
     const end = audioDefinition.duration + msProgress;
     const leftPos = calculateProgressPosition(msProgress);
     const width = calculateProgressPosition(end) - leftPos;
+    const audio = new Audio(audioDefinition.audio.src);
+    const id = getRandomString();
+    audio.addEventListener('ended', () => {
+        dom.query(`.path-item[data-item-id="${id}"]`).removeClass('active');
+    });
     const sound = {
-        id: getRandomString(),
-        audio: new Audio(audioDefinition.audio.src),
+        id,
+        audio,
         start: msProgress,
         end,
         leftPos,
